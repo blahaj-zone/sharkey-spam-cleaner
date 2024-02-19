@@ -23,6 +23,5 @@ jobs:
     - run: corepack enable
     - run: pnpm i
     - run: pnpm run build
-    - run: cd ui
-    - run: pnpm i
-    - run: pnpm run build
+    - run: cd ui; pnpm i
+    - run: cd ui; pnpm run build
