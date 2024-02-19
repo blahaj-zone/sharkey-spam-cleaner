@@ -1,5 +1,7 @@
 # Sharkey Spam Cleaner
 
+[![Build](https://github.com/blahaj-zone/sharkey-spam-cleaner/actions/workflows/node.js.yml/badge.svg)](https://github.com/blahaj-zone/sharkey-spam-cleaner/actions/workflows/node.js.yml)
+
 ## Description
 Spammers have recently inundated the fediverse by creating many small accounts automatically on
 very small and/or unprotected intstances, then proceeding to send messages out with essentially
