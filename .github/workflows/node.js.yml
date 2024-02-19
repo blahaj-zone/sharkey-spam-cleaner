@@ -21,8 +21,8 @@ jobs:
       with:
         node-version: '21'
     - run: corepack enable
-    - run: pnpm ci
+    - run: pnpm i
     - run: pnpm run build
     - run: cd ui
-    - run: pnpm ci
-    - run: pnpm build
+    - run: pnpm i
+    - run: pnpm run build
