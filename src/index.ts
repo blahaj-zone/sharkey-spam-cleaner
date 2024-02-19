@@ -30,21 +30,21 @@ const initDatabase = async () => {
     try {
         await pool.query(`
             CREATE TABLE IF NOT EXISTS
-            _ssc__ssc_blocked_md5s (
-                md5 varchar(32) PRIMARY KEY,
-                comment varchar NOT NULL
+            "_ssc__ssc_blocked_md5s" (
+                "md5" varchar(32) PRIMARY KEY,
+                "comment" varchar NOT NULL
             )
         `)
 
         await pool.query(`
             CREATE TABLE IF NOT EXISTS
-            _ssc_block_actions (
-                id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-                user_id varchar(32) NOT NULL,
-                post_count int NOT NULL,
-                file_count int NOT NULL,
-                md5s varchar(32)[] NOT NULL,
-                created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+            "_ssc_block_actions" (
+                "id" int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+                "user_id" varchar(32) NOT NULL,
+                "post_count" int NOT NULL,
+                "file_count" int NOT NULL,
+                "md5s" varchar(32)[] NOT NULL,
+                "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         `)
     } catch (error) {
@@ -60,12 +60,12 @@ const runQuery = async (): Promise<void> => {
     try {
         let query = `
             SELECT "userId"
-            FROM drive_file
-            WHERE
-                md5 IN (
-                    SELECT md5
-                    FROM _ssc_blocked_md5s
-                )
+            FROM "drive_file"
+            WHERE "userHost" IS NOT NULL
+              AND "md5" IN (
+                SELECT "md5"
+                FROM "_ssc_blocked_md5s"
+              )
         `;
         let res = await pool.query(query);
         const userIds = res.rows.map((row) => row.userId as string);
@@ -87,7 +87,7 @@ const runQuery = async (): Promise<void> => {
             query = `
                 UPDATE "user"
                 SET "isSuspended" = true
-                WHERE id = $1
+                WHERE "id" = $1
                   AND "isSuspended" = false
             `;
             res = await pool.query(query, [userId]);
@@ -104,7 +104,7 @@ const runQuery = async (): Promise<void> => {
             query = `
                 DELETE FROM "drive_file"
                 WHERE "userId" = $1
-                RETURNING md5
+                RETURNING "md5"
             `;
             res = await pool.query(query, [userId]);
             const files = res?.rowCount ?? 0;
@@ -121,8 +121,8 @@ const runQuery = async (): Promise<void> => {
                 .sort();
 
             query = `
-                INSERT INTO _ssc_block_actions
-                  (user_id, post_count, file_count, md5s)
+                INSERT INTO "_ssc_block_actions"
+                  ("user_id", "post_count", "file_count", "md5s")
                 VALUES ($1, $2, $3, $4)
             `;
             await pool.query(query, [userId, notes, files, md5s]);
@@ -156,7 +156,7 @@ app.post('/api/add-md5', async (req: express.Request, res: express.Response) => 
     }
 
     try {
-        const query = 'INSERT INTO _ssc_blocked_md5s(md5, comment) VALUES($1, $2) ON CONFLICT (md5) DO NOTHING';
+        const query = 'INSERT INTO "_ssc_blocked_md5s"("md5", "comment") VALUES($1, $2) ON CONFLICT ("md5") DO NOTHING';
         const result = await pool.query(query, [md5, comment || ""]);
 
         if (result.rowCount === 0) {
@@ -179,7 +179,7 @@ app.delete('/api/remove-md5/:md5', async (req: express.Request, res: express.Res
     }
 
     try {
-        const query = 'DELETE FROM _ssc_blocked_md5s WHERE md5 = $1';
+        const query = 'DELETE FROM "_ssc_blocked_md5s" WHERE "md5" = $1';
         const result = await pool.query(query, [md5]);
 
         if (result.rowCount === 0) {
@@ -197,7 +197,7 @@ app.delete('/api/remove-md5/:md5', async (req: express.Request, res: express.Res
 
 app.get('/api/blocked-md5s', async (req: express.Request, res: express.Response) => {
     try {
-        const query = 'SELECT md5, comment FROM _ssc_blocked_md5s';
+        const query = 'SELECT "md5", "comment" FROM "_ssc_blocked_md5s"';
         const result = await pool.query(query);
 
         console.log("got rows", result.rows)
