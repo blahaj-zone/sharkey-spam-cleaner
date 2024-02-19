@@ -10,8 +10,8 @@ This project aims to automatically detect these posts based on a blacklist of kn
 ## Features
 - Find uploads that match a spam file's signature.
 - Suspend the user posting the message.
-- Delete any posts made by that user.
-- Delete any files uploaded by that user.
+- Delete ALL posts made EVER by that user.
+- Delete ALL files uploaded EVER by that user.
 - Repeat.
 
 ## Getting Started
@@ -118,6 +118,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 |----------|-----------------------------
 | name:    | Kaity A
 | repo:    | [sharkey-spam-cleaner](https://github.com/blahaj-zone/sharkey-spam-cleaner)
-| matrix:  | @supakaity:chat.blahaj.zone
-| fedi:    | @supakaity@blahaj.zone
-| github:  | supakaity
+| matrix:  | `@supakaity:chat.blahaj.zone`
+| fedi:    | `@supakaity@blahaj.zone`
+| github:  | `supakaity`
